@@ -7,6 +7,7 @@ License:        GPLv3+
 URL:            https://github.com/whoozle/android-file-transfer-linux
 Source0:        https://github.com/whoozle/android-file-transfer-linux/archive/v%{version}.tar.gz
 
+BuildRequires:  cmake
 BuildRequires:  pkgconfig(fuse)
 BuildRequires:  pkgconfig(Qt5)
 BuildRequires:  file-devel
