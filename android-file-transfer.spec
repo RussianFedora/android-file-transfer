@@ -5,9 +5,11 @@ Summary:        Reliable MTP client with minimalistic UI
 
 License:        GPLv3+
 URL:            https://github.com/whoozle/android-file-transfer-linux
-Source0:        https://github.com/whoozle/android-file-transfer-linux/archive/v%{version}.tar.gz
+Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
+BuildRequires:  gcc-c++
 BuildRequires:  cmake
+BuildRequires:  make
 BuildRequires:  pkgconfig(fuse)
 BuildRequires:  pkgconfig(Qt5)
 BuildRequires:  file-devel
@@ -15,31 +17,24 @@ BuildRequires:  readline-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  libappstream-glib
 
-
 %description
 Android File Transfer for Linux — reliable MTP client with minimalistic UI
 similar to Android File Transfer for Mac.
 
 %prep
-%setup -q -n %{name}-linux-%{version}
-
+%autosetup -n %{name}-linux-%{version}
+mkdir %{_target_platform}
 
 %build
-mkdir build
-pushd build
+pushd %{_target_platform}
     %cmake ..
-    %make_build
 popd
-
+%make_build -C %{_target_platform}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-pushd build
-    %make_install
-popd
+%make_install -C %{_target_platform}
 
-install -dm 755 %{buildroot}%{_datadir}/appdata/
-install -m 644 -p %{name}.appdata.xml %{buildroot}%{_datadir}/appdata/%{name}.appdata.xml
+install -Dpm0644 %{name}.appdata.xml %{buildroot}%{_datadir}/appdata/%{name}.appdata.xml
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
@@ -64,7 +59,6 @@ fi
 %{_datadir}/appdata/%{name}.appdata.xml
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/128x128/apps/*.png
-
 
 %changelog
 * Fri Aug 12 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 3.0-1
